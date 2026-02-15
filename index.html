@@ -207,11 +207,58 @@
     .modalBack.show{display:flex}
 
     /* Ads */
-    .adWrap{margin:18px 0;text-align:center}
+    .adWrap{margin:12px 0;text-align:center}
     .stickyAd{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid rgba(15,23,42,.12);text-align:center;z-index:9999}
     .stickyAd .inner{max-width:1200px;margin:0 auto;padding:6px 8px}
     @media (max-width: 600px){ .wrap{margin-bottom:120px} }
-  </style>
+  
+    /* --- Mobile polish --- */
+    @media (max-width: 720px){
+      .wrap{margin:16px auto 90px;padding:0 12px;}
+      header{padding:12px 12px 0}
+      .topActions{padding:0 12px 12px}
+      .brand{gap:12px}
+      .brand img{width:44px;height:44px;border-radius:12px}
+      h1{font-size:22px}
+      .sub{font-size:13px}
+
+      /* Make top actions wrap nicely */
+      .topActions{gap:8px}
+      button{padding:10px 12px;border-radius:14px}
+      .pill{padding:8px 12px}
+
+      /* Tabs: tighter */
+      .tabs{gap:6px}
+      .tab{padding:9px 10px}
+
+      /* Table: hide less important columns on small screens */
+      table{min-width:0}
+      th:nth-child(7), td:nth-child(7),   /* Cube */
+      th:nth-child(8), td:nth-child(8),   /* Density */
+      th:nth-child(10), td:nth-child(10)  /* Row # */ { display:none; }
+
+      /* Inputs: tighter */
+      td input, td select{padding:10px 10px;border-radius:14px;font-size:16px}
+
+      /* Actions: two-column grid buttons */
+      .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .actions button{width:100%;justify-content:center}
+      .actions button.primary{grid-column:1 / -1} /* Add Row full width */
+
+      /* Results tiles: one per row */
+      .tiles{grid-template-columns:1fr}
+      .tile .v{font-size:24px}
+
+      /* Footer links wrap */
+      footer{padding:0 10px}
+    }
+
+    /* Optional: make horizontal scrolling obvious when needed */
+    .tableWrap{
+      -webkit-overflow-scrolling: touch;
+    }
+
+</style>
 
 </head>
 <body>
