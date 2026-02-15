@@ -258,6 +258,34 @@
       -webkit-overflow-scrolling: touch;
     }
 
+
+    /* True mobile: card layout instead of table */
+    .mobileCards{display:none;padding:12px 12px 0}
+    .mcard{
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:16px;
+      background:rgba(255,255,255,.92);
+      box-shadow:0 6px 18px rgba(2,6,23,.06);
+      padding:12px;
+      margin:0 0 12px;
+    }
+    .mhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .mrow{font-weight:900}
+    .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .mfield label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+    .mfield input,.mfield select{
+      width:100%;padding:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);
+      background:#fff;font-size:16px
+    }
+    .mmetrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .mmetric{border:1px solid rgba(15,23,42,.10);border-radius:14px;padding:10px;background:rgba(248,250,252,.9)}
+    .mmetric .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .mmetric .v{margin-top:6px;font-family:var(--mono);font-weight:900}
+    @media (max-width: 720px){
+      .tableWrap{display:none}
+      .mobileCards{display:block}
+    }
+
 </style>
 
 </head>
@@ -310,6 +338,8 @@
             </div>
           </div>
         </div>
+
+        <div id="mobileCards" class="mobileCards"></div>
 
         <div class="tableWrap">
           <table aria-label="Load lines">
@@ -513,6 +543,7 @@
 
   const tabsEl = document.getElementById("tabs");
   const tbodyEl = document.getElementById("tbody");
+  const mobileCardsEl = document.getElementById("mobileCards");
   const unitsEl = document.getElementById("units");
 
   const totWeightEl = document.getElementById("totWeight");
@@ -679,7 +710,8 @@
     const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
 
     tbodyEl.innerHTML = "";
-    viewRows.forEach((row, idx) => {
+    if(mobileCardsEl) mobileCardsEl.innerHTML = "";
+viewRows.forEach((row, idx) => {
       const tr = document.createElement("tr");
       const computed = computeRow(row);
       const badge = classBadge(computed.freightClass, computed.riskLevel, computed.isValid);
@@ -713,8 +745,9 @@
       tr.appendChild(tdB);
 
       tr.appendChild(tdText(active.specialAll ? "—" : (idx+1), true));
+            buildMobileCard(row, idx, computed, active);
       tbodyEl.appendChild(tr);
-    });
+});
 
     const tab = getActiveTab();
     const canEdit = !tab.specialAll;
@@ -812,6 +845,108 @@ const active = getActiveTab();
     return span;
   }
 
+  function buildMobileCard(row, idx, computed, active){
+    if(!mobileCardsEl) return;
+    const card = document.createElement("div");
+    card.className = "mcard";
+    card.dataset.idx = idx;
+
+    const head = document.createElement("div");
+    head.className = "mhead";
+    const rowLbl = document.createElement("div");
+    rowLbl.className = "mrow";
+    rowLbl.textContent = active.specialAll ? "Row —" : ("Row " + (idx+1));
+    if(!active.specialAll && state.selectedRowIndex === idx){
+      card.style.borderColor = "rgba(11,95,255,.35)";
+      card.style.boxShadow = "0 14px 30px rgba(11,95,255,.18)";
+    }
+    const badge = classBadge(computed.freightClass, computed.riskLevel, computed.isValid);
+    badge.classList.add("mbadge");
+    head.appendChild(rowLbl);
+    head.appendChild(badge);
+    card.appendChild(head);
+
+    const grid = document.createElement("div");
+    grid.className = "mgrid";
+
+    function field(label, el){
+      const wrap = document.createElement("div");
+      wrap.className = "mfield";
+      const lab = document.createElement("label");
+      lab.textContent = label;
+      wrap.appendChild(lab);
+      wrap.appendChild(el);
+      return wrap;
+    }
+    function numInput(key, val, attrs){
+      const input = document.createElement("input");
+      input.className = "num";
+      input.inputMode = "decimal";
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.value = val ?? "";
+      Object.entries(attrs||{}).forEach(([k,v])=>input.setAttribute(k, v));
+      ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
+        input.addEventListener(ev, (e)=>e.stopPropagation());
+      });
+      input.addEventListener("input", () => {
+        row[key] = input.value;
+        lightweightUpdateFromEl(input);
+        persist();
+      });
+      return input;
+    }
+    function selInput(key, val, options){
+      const sel = document.createElement("select");
+      options.forEach(o=>{
+        const opt=document.createElement("option"); opt.value=o; opt.textContent=o; sel.appendChild(opt);
+      });
+      sel.value = val || options[0];
+      ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
+        sel.addEventListener(ev, (e)=>e.stopPropagation());
+      });
+      sel.addEventListener("change", () => {
+        row[key] = sel.value;
+        lightweightUpdateFromEl(sel);
+        persist();
+      });
+      return sel;
+    }
+
+    grid.appendChild(field("Qty", numInput("qty", row.qty, {type:"number", min:"0", step:"1"})));
+    grid.appendChild(field("Package", selInput("pack", row.pack, PACKAGES)));
+    grid.appendChild(field("Length", numInput("L", row.L, {type:"number", min:"0", step:"0.01"})));
+    grid.appendChild(field("Width", numInput("W", row.W, {type:"number", min:"0", step:"0.01"})));
+    grid.appendChild(field("Height", numInput("H", row.H, {type:"number", min:"0", step:"0.01"})));
+    grid.appendChild(field("Weight", numInput("WT", row.WT, {type:"number", min:"0", step:"0.01"})));
+    card.appendChild(grid);
+
+    const metrics = document.createElement("div");
+    metrics.className = "mmetrics";
+    const cube = document.createElement("div");
+    cube.className = "mmetric";
+    cube.innerHTML = '<div class="k">Cube</div><div class="v mcube">' + formatNumber(computed.cube,2) + ' ft³</div>';
+    const den = document.createElement("div");
+    den.className = "mmetric";
+    den.innerHTML = '<div class="k">Density</div><div class="v mdensity">' + (computed.isValid ? formatNumber(computed.density,2) : "—") + ' lb/ft³</div>';
+    metrics.appendChild(cube);
+    metrics.appendChild(den);
+    card.appendChild(metrics);
+
+    if(!computed.isValid) card.style.outline = "2px solid rgba(239,68,68,.25)";
+    else if(computed.riskLevel==="warn") card.style.outline = "2px solid rgba(245,158,11,.25)";
+
+    card.addEventListener("click", () => {
+      if(active.specialAll) return;
+      state.selectedRowIndex = idx;
+      renderTableAndResults();
+      persist();
+    });
+
+    mobileCardsEl.appendChild(card);
+  }
+
+
   function renderClassChart(){
     const chartEl = document.getElementById("classChart");
     chartEl.innerHTML = "";
@@ -906,18 +1041,40 @@ const active = getActiveTab();
   function lightweightUpdateFromEl(el){
     try{
       const tr = el.closest("tr");
-      if(!tr) { renderTableAndResults(); return; }
-      const idx = Array.from(tr.parentElement.children).indexOf(tr);
       const active = getActiveTab();
       const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
+      let idx = -1;
+      if(tr){ idx = Array.from(tr.parentElement.children).indexOf(tr); }
+      else{
+        const card = el.closest(".mcard");
+        if(card) idx = Number(card.dataset.idx);
+      }
+      if(idx < 0){ renderTableAndResults(); return; }
       const row = viewRows[idx];
       if(!row){ renderTableAndResults(); return; }
 
       const c = computeRow(row);
 
+      if(!tr){
+        const card = el.closest(".mcard");
+        if(card){
+          const cubeEl = card.querySelector(".mcube");
+          const denEl  = card.querySelector(".mdensity");
+          if(cubeEl) cubeEl.textContent = formatNumber(c.cube,2) + " ft³";
+          if(denEl) denEl.textContent = (c.isValid ? formatNumber(c.density,2) : "—") + " lb/ft³";
+          const badge = card.querySelector(".mbadge");
+          if(badge){
+            badge.className = "badge mbadge " + (!c.isValid ? "b-bad" : (c.riskLevel==="warn" ? "b-warn" : "b-good"));
+            badge.textContent = c.isValid ? c.freightClass : "Fix";
+            badge.title = !c.isValid ? "Missing/invalid inputs" : (c.riskLevel==="warn" ? "Near a class boundary (reclass risk)" : "OK");
+          }
+          card.style.outline = (!c.isValid) ? "2px solid rgba(239,68,68,.25)" : (c.riskLevel==="warn" ? "2px solid rgba(245,158,11,.25)" : "");
+        }
+      }
       // td indices: 0 qty,1 pack,2 L,3 W,4 H,5 WT,6 cube,7 density,8 class,9 row#
-      const tds = tr.querySelectorAll("td");
-      if(tds.length >= 9){
+      if(tr){
+        const tds = tr.querySelectorAll("td");
+        if(tds.length >= 9){
         tds[6].textContent = formatNumber(c.cube, 2);
         tds[7].textContent = c.isValid ? formatNumber(c.density, 2) : "—";
 
@@ -933,6 +1090,7 @@ const active = getActiveTab();
         tr.classList.remove("rowBad","rowWarn");
         if(!c.isValid) tr.classList.add("rowBad");
         else if(c.riskLevel === "warn") tr.classList.add("rowWarn");
+      }
       }
 
       // Update totals panel without rebuilding the table
