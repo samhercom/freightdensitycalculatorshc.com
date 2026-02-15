@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Freight Density &amp; Class Calculator (FDC) | freightdensitycalculatorshc.com</title>
+  <meta name="description" content="Free freight density and class calculator with multiple loads. Calculate cubic feet, density (lb/ft³), and estimated freight class." />
+  
+  <link rel="canonical" href="https://freightdensitycalculatorshc.com/" /><meta name="theme-color" content="#0b5fff" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <!-- AdSense (replace ca-pub-XXXXXXXXXXXX after approval) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
+    crossorigin="anonymous"></script>
+
+  
+  <style>
+    :root{
+      --bg0:#0b5fff;
+      --bg:#f7f8fc;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:rgba(15,23,42,.10);
+      --shadow: 0 12px 28px rgba(2,6,23,.08);
+      --shadow2: 0 6px 18px rgba(2,6,23,.06);
+      --radius:16px;
+      --radius2:12px;
+      --primary:#0b5fff;
+      --primary2:#0847c7;
+      --good:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(11,95,255,.18), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(11,95,255,.12), transparent 55%),
+        var(--bg);
+    }
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1220px;margin:26px auto 90px;padding:0 16px;}
+    header{
+      display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;
+      padding:14px 14px 0;
+    }
+    .hero{
+      background:linear-gradient(135deg, rgba(11,95,255,.10), rgba(255,255,255,0));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow2);
+      padding:14px;
+    }
+    .brand{display:flex;gap:14px;align-items:center}
+    .brand img{
+      width:54px;height:54px;border-radius:14px;border:1px solid var(--line);
+      box-shadow:0 8px 18px rgba(2,6,23,.10);
+      background:#fff;
+    }
+    h1{margin:0;font-size:28px;letter-spacing:-.03em;line-height:1.1}
+    .sub{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.35}
+    .topActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:0 14px 14px}
+    .pill{
+      display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);
+      background:rgba(255,255,255,.75);
+      backdrop-filter:saturate(160%) blur(6px);
+      border-radius:999px;padding:8px 12px; box-shadow:var(--shadow2);
+    }
+    .pill label{color:var(--muted);font-size:13px}
+    select,input,button,textarea{font:inherit}
+    select{
+      border:0;background:transparent;color:var(--text);outline:none;font-weight:700
+    }
+    button{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.85);
+      backdrop-filter:saturate(160%) blur(6px);
+      padding:10px 12px;border-radius:12px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+      box-shadow:var(--shadow2);
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+    }
+    button:hover{background:#fff}
+    button:active{transform:translateY(1px)}
+    button.primary{
+      background:linear-gradient(180deg, var(--primary), var(--primary2));
+      color:#fff;border-color:transparent;
+      box-shadow:0 12px 22px rgba(11,95,255,.25);
+    }
+    button.primary:hover{filter:brightness(1.02)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .grid{display:grid;grid-template-columns: 1.55fr .85fr; gap:16px; margin-top:16px}
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+    .card{
+      background:rgba(255,255,255,.82);
+      backdrop-filter:saturate(160%) blur(6px);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .cardHead{padding:14px 14px 0}
+    .cardBody{padding:14px}
+    .tabs{
+      display:flex;gap:8px;flex-wrap:wrap;
+      border-bottom:1px solid var(--line);
+      padding:12px 12px 0
+    }
+    .tab{
+      padding:10px 12px;border:1px solid var(--line);border-bottom:0;
+      border-top-left-radius:14px;border-top-right-radius:14px;
+      background:rgba(255,255,255,.8);
+      color:var(--muted);cursor:pointer;
+      transition:background .2s ease, color .2s ease;
+    }
+    .tab.active{
+      color:var(--primary);
+      background:#fff;
+      font-weight:900;
+    }
+    .hint{
+      color:var(--muted);font-size:13px;line-height:1.35
+    }
+    .kbd{
+      font-family:var(--mono);
+      font-size:12px;
+      border:1px solid var(--line);
+      border-bottom-width:2px;
+      border-radius:9px;
+      padding:2px 6px;
+      background:#fff;
+      color:#111827;
+    }
+    .tableWrap{overflow:auto;border-top:1px solid var(--line)}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:920px}
+    th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+    th{
+      font-size:11px;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.08em;
+      background:rgba(248,250,252,.9);
+      position:sticky;top:0;z-index:2
+    }
+    tbody tr:hover td{background:rgba(11,95,255,.04)}
+    td input, td select{
+      width:100%;
+      padding:10px 10px;
+      border:1px solid rgba(15,23,42,.12);
+      border-radius:12px;
+      background:rgba(255,255,255,.92);
+      outline:none;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    td input:focus, td select:focus{
+      border-color:rgba(11,95,255,.55);
+      box-shadow:0 0 0 4px rgba(11,95,255,.12);
+      background:#fff;
+    }
+    .num{font-family:var(--mono)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .right{padding:14px}
+    .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .tile{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.90);
+      box-shadow:var(--shadow2);
+    }
+    .tile .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.09em}
+    .tile .v{margin-top:6px;font-size:26px;font-weight:900;letter-spacing:-.02em}
+    .tile .v small{font-size:14px;color:var(--muted);font-weight:700}
+    .badge{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-width:66px;padding:8px 10px;border-radius:12px;font-weight:900;border:1px solid transparent;
+      font-family:var(--mono);
+    }
+    .b-good{background:rgba(22,163,74,.10);color:var(--good);border-color:rgba(22,163,74,.25)}
+    .b-warn{background:rgba(245,158,11,.12);color:#92400e;border-color:rgba(245,158,11,.28)}
+    .b-bad {background:rgba(239,68,68,.10);color:var(--bad);border-color:rgba(239,68,68,.25)}
+    details{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+    summary{cursor:pointer;font-weight:900}
+    .chart{margin-top:10px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+    .chartRow{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+    .chartRow:last-child{border-bottom:0}
+    .chartRow span{color:var(--muted)}
+    .footerNote{margin-top:16px;color:var(--muted);font-size:12px}
+    .rowWarn{outline:2px solid rgba(245,158,11,.35);outline-offset:-2px;border-radius:12px}
+    .rowBad{outline:2px solid rgba(239,68,68,.30);outline-offset:-2px;border-radius:12px}
+    .small{font-size:12px;color:var(--muted)}
+    .inline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .ghost{background:transparent}
+    textarea{
+      width:100%;min-height:130px;border:1px solid rgba(15,23,42,.12);
+      border-radius:14px;padding:10px;background:#fff
+    }
+    .modalBack{position:fixed;inset:0;background:rgba(2,6,23,.55);display:none;align-items:center;justify-content:center;padding:16px}
+    .modal{max-width:720px;width:100%;background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow);padding:14px}
+    .modalHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .modalBack.show{display:flex}
+
+    /* Ads */
+    .adWrap{margin:18px 0;text-align:center}
+    .stickyAd{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid rgba(15,23,42,.12);text-align:center;z-index:9999}
+    .stickyAd .inner{max-width:1200px;margin:0 auto;padding:6px 8px}
+    @media (max-width: 600px){ .wrap{margin-bottom:120px} }
+  </style>
+
+</head>
+<body>
+  <div class="wrap">
+    <div class="card hero">
+    <header>
+      <div class="brand">
+        <img src="logo.png" alt="FDC logo" />
+        <div>
+          <h1>FDC — Freight Density &amp; Class Calculator</h1>
+          <div class="sub">Enter dimensions &amp; weight. Multiple loads. Fast density → class estimates.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <div class="pill">
+          <label for="units">Units</label>
+          <select id="units">
+            <option value="in_lb" selected>in / lb</option>
+            <option value="cm_kg">cm / kg</option>
+          </select>
+        </div>
+        <button id="exportBtn" title="Export all loads to CSV">Export CSV</button>
+        <button id="printBtn" title="Print summary">Print</button>
+        <button id="resetBtn" class="ghost" title="Reset app">Reset</button>
+      </div>
+    </header>
+  </div>
+
+    <!-- Top Banner Ad -->
+    <div class="adWrap">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXX"
+           data-ad-slot="1111111111"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <section class="card">
+        <div class="tabs" id="tabs"></div>
+
+        <div class="cardBody">
+          <div class="inline">
+            <div class="hint">
+              Tip: Paste multiple lines with <span class="kbd">qty,length,width,height,weight</span> (and optional package). Example: <span class="kbd">1,48,40,50,500,pallet</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tableWrap">
+          <table aria-label="Load lines">
+            <thead>
+              <tr>
+                <th style="width:72px">Qty</th>
+                <th style="width:140px">Package</th>
+                <th style="width:120px">Length</th>
+                <th style="width:120px">Width</th>
+                <th style="width:120px">Height</th>
+                <th style="width:140px">Weight</th>
+                <th style="width:120px">Cube</th>
+                <th style="width:140px">Density</th>
+                <th style="width:90px">Class</th>
+                <th style="width:90px">Row</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="cardBody">
+          <div class="actions">
+            <button class="primary" id="addRowBtn">+ Add Row</button>
+            <button id="dupRowBtn" disabled>Duplicate Selected</button>
+            <button id="delRowBtn" disabled>Delete Selected</button>
+            <button id="clearLoadBtn">Clear This Load</button>
+            <button id="pasteBtn">Paste Data</button>
+            <button id="addLoadBtn">+ Add Load Tab</button>
+            <button id="delLoadBtn" class="ghost">Delete Load Tab</button>
+          </div>
+
+          <div class="footerNote">
+            Note: Density class is a guideline. Commodity, packaging, stowability, liability, and handling can override class.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <aside class="card">
+        <div class="cardHead">
+          <h2 style="margin:0 0 10px">Results</h2>
+        </div>
+        <div class="right">
+          <div class="tiles">
+            <div class="tile">
+              <div class="k">Total Weight</div>
+              <div class="v" id="totWeight">0 <small>lb</small></div>
+            </div>
+            <div class="tile">
+              <div class="k">Total Cube</div>
+              <div class="v" id="totCube">0 <small>ft³</small></div>
+            </div>
+            <div class="tile">
+              <div class="k">Blended Density</div>
+              <div class="v" id="blendDensity">0 <small>lb/ft³</small></div>
+            </div>
+            <div class="tile">
+              <div class="k">Blended Class</div>
+              <div class="v" id="blendClass">—</div>
+            </div>
+          </div>
+
+          <!-- Sidebar Ad -->
+          <div style="margin-top:14px">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXX"
+                 data-ad-slot="2222222222"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+          </div>
+
+          <div style="margin-top:10px" class="tile">
+            <div class="k">Load Summary</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+              <div class="inline"><span class="small">Active tab totals</span></div>
+              <div class="inline"><strong>Max Class:</strong> <span id="maxClass">—</span></div>
+              <div class="inline"><strong>Rows:</strong> <span id="rowCount">0</span></div>
+              <div class="inline"><strong>Reclass Risk Rows:</strong> <span id="riskCount">0</span></div>
+            </div>
+          </div>
+
+          <details>
+            <summary>Class Chart (Density → Class)</summary>
+            <div class="chart" id="classChart"></div>
+          </details>
+
+          <details>
+            <summary>How It Works</summary>
+            <div class="hint" style="margin-top:10px">
+              Cube is calculated as <span class="kbd">(L × W × H × Qty) / 1728</span> (inches → ft³).<br/>
+              Density is <span class="kbd">(Weight × Qty) / Cube</span>. Freight class is mapped using common density guidelines.
+              Rows highlighted amber are within 5% of a class boundary.
+            </div>
+          </details>
+        </div>
+      </aside>
+    </div>
+
+    <footer style="margin-top:26px;padding:18px;text-align:center;font-size:14px;color:#666">
+      <a href="privacy.html">Privacy Policy</a> |
+      <a href="terms.html">Terms</a> |
+      <a href="disclaimer.html">Disclaimer</a> |
+      <a href="contact.html">Contact</a>
+      <div style="margin-top:8px" class="small">FDC v1.0 • © <span id="year"></span> freightdensitycalculatorshc.com</div>
+    </footer>
+  </div>
+
+  <!-- Sticky Footer Ad -->
+  <div class="stickyAd">
+    <div class="inner">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXX"
+           data-ad-slot="3333333333"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+  </div>
+
+  <!-- Paste modal -->
+  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="pasteTitle">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <div id="pasteTitle" style="font-weight:900;font-size:18px">Paste Data</div>
+          <div class="small">One row per line. Format: qty,length,width,height,weight[,package]</div>
+        </div>
+        <button id="closeModalBtn">Close</button>
+      </div>
+      <div style="margin-top:10px">
+        <textarea id="pasteArea" placeholder="1,48,40,50,500,pallet
+2,24,24,20,200,carton"></textarea>
+      </div>
+      <div class="actions" style="margin-top:10px">
+        <button class="primary" id="applyPasteBtn">Apply</button>
+        <button id="examplePasteBtn">Insert Example</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // IMPORTANT: AdSense slots won't render until you replace ca-pub and slot IDs.
+  // Safe to keep pushes; AdSense ignores until approved/valid.
+  try{
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  }catch(e){}
+
+  // Hide empty sticky ad bar until AdSense IDs are real
+  try{
+    const hasPlaceholder = document.documentElement.innerHTML.includes('ca-pub-XXXXXXXXXXXX');
+    if(hasPlaceholder){
+      const sticky = document.querySelector('.stickyAd');
+      if(sticky) sticky.style.display = 'none';
+    }
+  }catch(e){}
+
+
+  // ---------- Density → Class chart ----------
+  const DENSITY_TABLE = [
+    { min: 50, class: "50" },
+    { min: 35, class: "55" },
+    { min: 30, class: "60" },
+    { min: 22.5, class: "65" },
+    { min: 15, class: "70" },
+    { min: 13.5, class: "77.5" },
+    { min: 12, class: "85" },
+    { min: 10.5, class: "92.5" },
+    { min: 9, class: "100" },
+    { min: 8, class: "110" },
+    { min: 7, class: "125" },
+    { min: 6, class: "150" },
+    { min: 5, class: "175" },
+    { min: 4, class: "200" },
+    { min: 3, class: "250" },
+    { min: 2, class: "300" },
+    { min: 1, class: "400" },
+    { min: 0, class: "500" }
+  ];
+
+  const PACKAGES = ["Pallet","Carton","Crate","Drum","Other"];
+  const LS_KEY = "fdc_state_v1";
+
+  const state = loadState() || {
+    units: "in_lb",
+    activeTabId: "loadA",
+    tabs: [
+      { id:"loadA", name:"Load A", rows: [blankRow()] },
+      { id:"loadB", name:"Load B", rows: [blankRow()] },
+      { id:"loadC", name:"Load C", rows: [blankRow()] },
+      { id:"all",  name:"All Loads", specialAll:true }
+    ],
+    selectedRowIndex: null
+  };
+
+  const tabsEl = document.getElementById("tabs");
+  const tbodyEl = document.getElementById("tbody");
+  const unitsEl = document.getElementById("units");
+
+  const totWeightEl = document.getElementById("totWeight");
+  const totCubeEl = document.getElementById("totCube");
+  const blendDensityEl = document.getElementById("blendDensity");
+  const blendClassEl = document.getElementById("blendClass");
+  const maxClassEl = document.getElementById("maxClass");
+  const rowCountEl = document.getElementById("rowCount");
+  const riskCountEl = document.getElementById("riskCount");
+
+  const addRowBtn = document.getElementById("addRowBtn");
+  const dupRowBtn = document.getElementById("dupRowBtn");
+  const delRowBtn = document.getElementById("delRowBtn");
+  const clearLoadBtn = document.getElementById("clearLoadBtn");
+  const addLoadBtn = document.getElementById("addLoadBtn");
+  const delLoadBtn = document.getElementById("delLoadBtn");
+  const pasteBtn = document.getElementById("pasteBtn");
+
+  const exportBtn = document.getElementById("exportBtn");
+  const printBtn = document.getElementById("printBtn");
+  const resetBtn = document.getElementById("resetBtn");
+
+  const modalBack = document.getElementById("modalBack");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const applyPasteBtn = document.getElementById("applyPasteBtn");
+  const examplePasteBtn = document.getElementById("examplePasteBtn");
+  const pasteArea = document.getElementById("pasteArea");
+
+  unitsEl.value = state.units;
+  renderClassChart();
+  renderTabs();
+  renderTableAndResults();
+  registerSW();
+  persist();
+
+  unitsEl.addEventListener("change", () => {
+    state.units = unitsEl.value;
+    state.selectedRowIndex = null;
+    renderTableAndResults();
+    persist();
+  });
+
+  addRowBtn.addEventListener("click", () => {
+    const tab = getActiveTab();
+    if(tab.specialAll) return;
+    tab.rows.push(blankRow());
+    state.selectedRowIndex = tab.rows.length - 1;
+    renderTableAndResults();
+    persist();
+  });
+
+  dupRowBtn.addEventListener("click", () => {
+    const tab = getActiveTab();
+    if(tab.specialAll) return;
+    if(state.selectedRowIndex == null) return;
+    const r = tab.rows[state.selectedRowIndex];
+    tab.rows.splice(state.selectedRowIndex+1, 0, {...r});
+    state.selectedRowIndex = state.selectedRowIndex+1;
+    renderTableAndResults();
+    persist();
+  });
+
+  delRowBtn.addEventListener("click", () => {
+    const tab = getActiveTab();
+    if(tab.specialAll) return;
+    if(state.selectedRowIndex == null) return;
+    tab.rows.splice(state.selectedRowIndex, 1);
+    if(tab.rows.length === 0) tab.rows.push(blankRow());
+    state.selectedRowIndex = null;
+    renderTableAndResults();
+    persist();
+  });
+
+  clearLoadBtn.addEventListener("click", () => {
+    const tab = getActiveTab();
+    if(tab.specialAll) return;
+    tab.rows = [blankRow()];
+    state.selectedRowIndex = null;
+    renderTableAndResults();
+    persist();
+  });
+
+  addLoadBtn.addEventListener("click", () => {
+    const newId = "load" + Math.random().toString(16).slice(2,8);
+    const idxAll = state.tabs.findIndex(t => t.specialAll);
+    state.tabs.splice(idxAll, 0, { id:newId, name:`Load ${String.fromCharCode(65 + idxAll)}`, rows:[blankRow()]});
+    state.activeTabId = newId;
+    state.selectedRowIndex = null;
+    renderTabs();
+    renderTableAndResults();
+    persist();
+  });
+
+  delLoadBtn.addEventListener("click", () => {
+    const tab = getActiveTab();
+    if(tab.specialAll) return;
+    const normalTabs = state.tabs.filter(t => !t.specialAll);
+    if(normalTabs.length <= 1) return;
+    state.tabs = state.tabs.filter(t => t.id !== tab.id);
+    state.activeTabId = state.tabs.find(t => !t.specialAll).id;
+    state.selectedRowIndex = null;
+    renderTabs();
+    renderTableAndResults();
+    persist();
+  });
+
+  pasteBtn.addEventListener("click", () => openModal());
+  closeModalBtn.addEventListener("click", closeModal);
+  modalBack.addEventListener("click", (e) => { if(e.target === modalBack) closeModal(); });
+
+  examplePasteBtn.addEventListener("click", () => {
+    pasteArea.value =
+`1,48,40,50,500,pallet
+2,24,24,20,200,carton
+1,60,30,40,600,crate
+3,18,18,30,150,drum`;
+  });
+
+  applyPasteBtn.addEventListener("click", () => {
+    const tab = getActiveTab();
+    if(tab.specialAll) return;
+    const parsed = parsePaste(pasteArea.value.trim());
+    if(parsed.rows.length){
+      tab.rows = parsed.rows;
+      state.selectedRowIndex = null;
+      renderTableAndResults();
+      persist();
+    }
+    closeModal();
+  });
+
+  exportBtn.addEventListener("click", () => {
+    const csv = exportCSV();
+    downloadText(csv, "fdc-freight-density-class.csv", "text/csv");
+  });
+
+  printBtn.addEventListener("click", () => window.print());
+
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  });
+
+  function renderTabs(){
+    tabsEl.innerHTML = "";
+    state.tabs.forEach(t => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (t.id === state.activeTabId ? " active": "");
+      btn.type = "button";
+      btn.textContent = t.name;
+      btn.addEventListener("click", () => {
+        state.activeTabId = t.id;
+        state.selectedRowIndex = null;
+        renderTabs();
+        renderTableAndResults();
+        persist();
+      });
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function renderTableAndResults(){
+    const active = getActiveTab();
+    const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
+
+    tbodyEl.innerHTML = "";
+    viewRows.forEach((row, idx) => {
+      const tr = document.createElement("tr");
+      const computed = computeRow(row);
+      const badge = classBadge(computed.freightClass, computed.riskLevel, computed.isValid);
+
+      if(!computed.isValid) tr.classList.add("rowBad");
+      else if(computed.riskLevel === "warn") tr.classList.add("rowWarn");
+
+      tr.addEventListener("click", () => {
+        if(active.specialAll) return;
+        state.selectedRowIndex = idx;
+        renderTableAndResults();
+        persist();
+      });
+
+      if(!active.specialAll && state.selectedRowIndex === idx){
+        tr.style.background = "rgba(11,95,255,.06)";
+      }
+
+      tr.appendChild(tdInput("qty", row.qty, idx, { type:"number", min:"0", step:"1" }));
+      tr.appendChild(tdSelect("pack", row.pack, idx, PACKAGES));
+      tr.appendChild(tdInput("L", row.L, idx, { type:"number", min:"0", step:"0.01" }));
+      tr.appendChild(tdInput("W", row.W, idx, { type:"number", min:"0", step:"0.01" }));
+      tr.appendChild(tdInput("H", row.H, idx, { type:"number", min:"0", step:"0.01" }));
+      tr.appendChild(tdInput("WT", row.WT, idx, { type:"number", min:"0", step:"0.01" }));
+
+      tr.appendChild(tdText(formatNumber(computed.cube, 2), true));
+      tr.appendChild(tdText(computed.isValid ? formatNumber(computed.density, 2) : "—", true));
+
+      const tdB = document.createElement("td");
+      tdB.appendChild(badge);
+      tr.appendChild(tdB);
+
+      tr.appendChild(tdText(active.specialAll ? "—" : (idx+1), true));
+      tbodyEl.appendChild(tr);
+    });
+
+    const tab = getActiveTab();
+    const canEdit = !tab.specialAll;
+    dupRowBtn.disabled = !canEdit || state.selectedRowIndex == null;
+    delRowBtn.disabled = !canEdit || state.selectedRowIndex == null;
+    clearLoadBtn.disabled = !canEdit;
+    pasteBtn.disabled = !canEdit;
+    delLoadBtn.disabled = tab.specialAll || state.tabs.filter(t=>!t.specialAll).length<=1;
+
+    const totals = computeTotals(viewRows);
+    const units = getUnitsLabels();
+
+    totWeightEl.innerHTML = `${formatNumber(totals.totalWeight, 2)} <small>${units.weight}</small>`;
+    totCubeEl.innerHTML = `${formatNumber(totals.totalCube, 2)} <small>ft³</small>`;
+    blendDensityEl.innerHTML = `${totals.totalCube>0 ? formatNumber(totals.blendedDensity, 2): "0"} <small>lb/ft³</small>`;
+    blendClassEl.textContent = totals.totalCube>0 ? totals.blendedClass : "—";
+    maxClassEl.textContent = totals.maxClass || "—";
+    rowCountEl.textContent = viewRows.length.toString();
+    riskCountEl.textContent = totals.riskCount.toString();
+  }
+
+  function tdInput(key, val, rowIndex, attrs){
+    const td = document.createElement("td");
+    const input = document.createElement("input");
+    Object.entries(attrs||{}).forEach(([k,v])=>input.setAttribute(k,v));
+    input.value = val ?? "";
+    input.classList.add("num");
+
+    
+    // Prevent row click re-render from stealing focus (iOS/iPad)
+    ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
+      input.addEventListener(ev, (e)=>e.stopPropagation(), );
+    });
+const active = getActiveTab();
+    if(active.specialAll){
+      input.disabled = true;
+      input.style.opacity = ".75";
+    } else {
+      input.addEventListener("input", () => {
+        const tab = getActiveTab();
+        const r = tab.rows[rowIndex];
+        r[key] = input.value;
+        lightweightUpdateFromEl(input);
+        persist();
+});
+    }
+    td.appendChild(input);
+    return td;
+  }
+
+  function tdSelect(key, val, rowIndex, options){
+    const td = document.createElement("td");
+    const sel = document.createElement("select");
+    options.forEach(o=>{
+      const opt = document.createElement("option");
+      opt.value = o; opt.textContent = o;
+      sel.appendChild(opt);
+    });
+    sel.value = val || options[0];
+
+    
+
+    // Prevent row click re-render from stealing focus (iOS/iPad)
+    ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
+      sel.addEventListener(ev, (e)=>e.stopPropagation(), );
+    });
+const active = getActiveTab();
+    if(active.specialAll){
+      sel.disabled = true;
+      sel.style.opacity = ".75";
+    } else {
+      sel.addEventListener("change", () => {
+        const tab = getActiveTab();
+        tab.rows[rowIndex][key] = sel.value;
+        lightweightUpdateFromEl(sel);
+        persist();
+});
+    }
+    td.appendChild(sel);
+    return td;
+  }
+
+  function tdText(text, mono=false){
+    const td = document.createElement("td");
+    td.textContent = text;
+    if(mono) td.classList.add("num");
+    return td;
+  }
+
+  function classBadge(freightClass, riskLevel, isValid){
+    const span = document.createElement("span");
+    span.className = "badge " + (!isValid ? "b-bad" : (riskLevel==="warn" ? "b-warn" : "b-good"));
+    span.textContent = isValid ? freightClass : "Fix";
+    span.title = !isValid ? "Missing/invalid inputs" : (riskLevel==="warn" ? "Near a class boundary (reclass risk)" : "OK");
+    return span;
+  }
+
+  function renderClassChart(){
+    const chartEl = document.getElementById("classChart");
+    chartEl.innerHTML = "";
+    for(let i=0;i<DENSITY_TABLE.length;i++){
+      const cur = DENSITY_TABLE[i];
+      const row = document.createElement("div");
+      row.className = "chartRow";
+      const left = document.createElement("div");
+      const right = document.createElement("div");
+      left.innerHTML = `<strong>Class ${cur.class}</strong> <span class="small">(≥ ${cur.min} lb/ft³)</span>`;
+      right.innerHTML = `<span>Range:</span> <strong>${rangeLabel(i)}</strong>`;
+      row.appendChild(left); row.appendChild(right);
+      chartEl.appendChild(row);
+    }
+    function rangeLabel(i){
+      const cur = DENSITY_TABLE[i];
+      const prev = DENSITY_TABLE[i-1];
+      if(!prev) return `≥ ${cur.min}`;
+      if(cur.min === 0) return `< ${prev.min}`;
+      return `${cur.min} – < ${prev.min}`;
+    }
+  }
+
+  function computeRow(row){
+    const units = state.units;
+    const qty = toNum(row.qty, 1);
+    const Lraw = toNum(row.L, 0);
+    const Wraw = toNum(row.W, 0);
+    const Hraw = toNum(row.H, 0);
+    const WTr = toNum(row.WT, 0);
+
+    let Lin=Lraw, Win=Wraw, Hin=Hraw, Wtlb=WTr;
+
+    if(units === "cm_kg"){
+      Lin = Lraw / 2.54;
+      Win = Wraw / 2.54;
+      Hin = Hraw / 2.54;
+      Wtlb = WTr * 2.2046226218;
+    }
+
+    const isValid = qty>0 && Lin>0 && Win>0 && Hin>0 && Wtlb>0;
+    const cube = isValid ? (Lin*Win*Hin*qty)/1728 : 0;
+    const weight = isValid ? (Wtlb*qty) : 0;
+    const density = (isValid && cube>0) ? (weight/cube) : 0;
+
+    const freightClass = isValid ? densityToClass(density) : "—";
+    const riskLevel = isValid ? boundaryRisk(density) : "bad";
+    return { cube, weight, density, freightClass, riskLevel, isValid };
+  }
+
+  function densityToClass(d){
+    for(const band of DENSITY_TABLE){
+      if(d >= band.min) return band.class;
+    }
+    return "500";
+  }
+
+  function boundaryRisk(d){
+    const bandIndex = DENSITY_TABLE.findIndex(b => d >= b.min);
+    if(bandIndex < 0) return "warn";
+    const band = DENSITY_TABLE[bandIndex];
+    if(band.min <= 0) return "good";
+    const dist = (d - band.min) / band.min;
+    return dist <= 0.05 ? "warn" : "good";
+  }
+
+  function computeTotals(rows){
+    let totalCube=0, totalWeight=0, maxClassNum=null, riskCount=0;
+    for(const r of rows){
+      const c = computeRow(r);
+      totalCube += c.cube;
+      totalWeight += c.weight;
+      if(c.isValid){
+        const clsNum = parseFloat(c.freightClass);
+        if(maxClassNum == null || clsNum > maxClassNum) maxClassNum = clsNum;
+        if(c.riskLevel==="warn") riskCount++;
+      } else {
+        riskCount++;
+      }
+    }
+    const blendedDensity = (totalCube>0) ? (totalWeight/totalCube) : 0;
+    const blendedClass = (totalCube>0) ? densityToClass(blendedDensity) : null;
+    return {
+      totalCube, totalWeight, blendedDensity, blendedClass,
+      maxClass: maxClassNum != null ? String(maxClassNum) : null,
+      riskCount
+    };
+  }
+
+
+  // Lightweight updates while typing (prevents iOS cursor/focus loss from full table re-render)
+  function lightweightUpdateFromEl(el){
+    try{
+      const tr = el.closest("tr");
+      if(!tr) { renderTableAndResults(); return; }
+      const idx = Array.from(tr.parentElement.children).indexOf(tr);
+      const active = getActiveTab();
+      const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
+      const row = viewRows[idx];
+      if(!row){ renderTableAndResults(); return; }
+
+      const c = computeRow(row);
+
+      // td indices: 0 qty,1 pack,2 L,3 W,4 H,5 WT,6 cube,7 density,8 class,9 row#
+      const tds = tr.querySelectorAll("td");
+      if(tds.length >= 9){
+        tds[6].textContent = formatNumber(c.cube, 2);
+        tds[7].textContent = c.isValid ? formatNumber(c.density, 2) : "—";
+
+        const badgeTd = tds[8];
+        const badge = badgeTd.querySelector(".badge");
+        if(badge){
+          badge.className = "badge " + (!c.isValid ? "b-bad" : (c.riskLevel==="warn" ? "b-warn" : "b-good"));
+          badge.textContent = c.isValid ? c.freightClass : "Fix";
+          badge.title = !c.isValid ? "Missing/invalid inputs" : (c.riskLevel==="warn" ? "Near a class boundary (reclass risk)" : "OK");
+        }
+
+        // row highlight
+        tr.classList.remove("rowBad","rowWarn");
+        if(!c.isValid) tr.classList.add("rowBad");
+        else if(c.riskLevel === "warn") tr.classList.add("rowWarn");
+      }
+
+      // Update totals panel without rebuilding the table
+      const totals = computeTotals(viewRows);
+      const units = getUnitsLabels();
+      totWeightEl.innerHTML = `${formatNumber(totals.totalWeight, 2)} <small>${units.weight}</small>`;
+      totCubeEl.innerHTML = `${formatNumber(totals.totalCube, 2)} <small>ft³</small>`;
+      blendDensityEl.innerHTML = `${totals.totalCube>0 ? formatNumber(totals.blendedDensity, 2): "0"} <small>lb/ft³</small>`;
+      blendClassEl.textContent = totals.totalCube>0 ? totals.blendedClass : "—";
+      maxClassEl.textContent = totals.maxClass || "—";
+      rowCountEl.textContent = viewRows.length.toString();
+      riskCountEl.textContent = totals.riskCount.toString();
+    }catch(e){
+      renderTableAndResults();
+    }
+  }
+
+  function blankRow(){ return { qty:"1", pack:"Pallet", L:"", W:"", H:"", WT:"" }; }
+
+  function getActiveTab(){
+    return state.tabs.find(t => t.id === state.activeTabId) || state.tabs[0];
+  }
+  function getAllRowsFlattened(){
+    const rows = [];
+    state.tabs.forEach(t=>{
+      if(t.specialAll) return;
+      (t.rows||[]).forEach(r=>rows.push(r));
+    });
+    return rows.length ? rows : [blankRow()];
+  }
+
+  function toNum(v, fallback){
+    const n = Number(String(v ?? "").trim());
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function formatNumber(n, dp){
+    const x = Number.isFinite(n) ? n : 0;
+    return x.toLocaleString(undefined,{maximumFractionDigits:dp, minimumFractionDigits:dp});
+  }
+  function getUnitsLabels(){
+    return state.units === "cm_kg" ? { dim:"cm", weight:"kg" } : { dim:"in", weight:"lb" };
+  }
+
+  function parsePaste(text){
+    const rows = [];
+    const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    for(const line of lines){
+      const parts = line.split(",").map(s=>s.trim()).filter(p=>p.length);
+      if(parts.length < 5) continue;
+      const qty = parts[0];
+      const L = parts[1], W = parts[2], H = parts[3], WT = parts[4];
+      let pack = parts[5] || "Pallet";
+      pack = normalizePack(pack);
+      rows.push({ qty, pack, L, W, H, WT });
+    }
+    return { rows };
+  }
+  function normalizePack(p){
+    const s = String(p||"").toLowerCase();
+    if(s.includes("cart")) return "Carton";
+    if(s.includes("crate")) return "Crate";
+    if(s.includes("drum")) return "Drum";
+    if(s.includes("pal")) return "Pallet";
+    return "Other";
+  }
+
+  function openModal(){
+    modalBack.classList.add("show");
+    pasteArea.focus();
+  }
+  function closeModal(){
+    modalBack.classList.remove("show");
+    pasteArea.value = "";
+  }
+
+  function exportCSV(){
+    const header = ["load","qty","package","length","width","height","weight","cube_ft3","density_lb_ft3","class","units"];
+    const lines = [header.join(",")];
+
+    state.tabs.forEach(t=>{
+      if(t.specialAll) return;
+      (t.rows||[]).forEach(r=>{
+        const c = computeRow(r);
+        lines.push([
+          csv(t.name), csv(r.qty), csv(r.pack), csv(r.L), csv(r.W), csv(r.H), csv(r.WT),
+          c.isValid ? c.cube.toFixed(4) : "",
+          c.isValid ? c.density.toFixed(4) : "",
+          c.isValid ? c.freightClass : "",
+          csv(state.units)
+        ].join(","));
+      });
+    });
+
+    const active = getActiveTab();
+    const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
+    const totals = computeTotals(viewRows);
+    lines.push("");
+    lines.push(["SUMMARY","total_weight_lb",totals.totalWeight.toFixed(4),"total_cube_ft3",totals.totalCube.toFixed(4),"blended_density",totals.blendedDensity.toFixed(4),"blended_class",totals.blendedClass || ""].join(","));
+    return lines.join("\n");
+  }
+  function csv(v){
+    const s = String(v ?? "");
+    if(/[,"\n]/.test(s)) return `"${s.replaceAll('"','""')}"`;
+    return s;
+  }
+  function downloadText(text, filename, mime){
+    const blob = new Blob([text], {type: mime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  }
+
+  function persist(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return null;
+      const s = JSON.parse(raw);
+      if(!s.tabs || !Array.isArray(s.tabs)) return null;
+      if(!s.activeTabId) s.activeTabId = s.tabs[0]?.id || "loadA";
+      if(!s.units) s.units = "in_lb";
+      if(!s.tabs.some(t=>t.specialAll)){
+        s.tabs.push({ id:"all", name:"All Loads", specialAll:true });
+      }
+      return s;
+    }catch(e){ return null; }
+  }
+
+  function registerSW(){
+    if("serviceWorker" in navigator){
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(()=>{});
+      });
+    }
+  }
+})();
+</script>
+</body>
+</html>
