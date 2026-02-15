@@ -16,18 +16,19 @@
   
   <style>
     :root{
-      --bg0:#0b5fff;
-      --bg:#f7f8fc;
+      /* Optimizer-style theme (adjust these 3 to match your optimizer exactly) */
+      --primary:#2563eb;     /* main blue */
+      --primary2:#1d4ed8;    /* darker blue */
+      --accent:#0ea5e9;      /* light accent */
+      --bg:#f5f7fb;
       --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:rgba(15,23,42,.10);
-      --shadow: 0 12px 28px rgba(2,6,23,.08);
-      --shadow2: 0 6px 18px rgba(2,6,23,.06);
-      --radius:16px;
-      --radius2:12px;
-      --primary:#0b5fff;
-      --primary2:#0847c7;
+      --text:#0b1220;
+      --muted:#5b6b84;
+      --line:rgba(11,18,32,.10);
+      --shadow: 0 14px 34px rgba(2,6,23,.10);
+      --shadow2: 0 8px 20px rgba(2,6,23,.08);
+      --radius:18px;
+      --radius2:14px;
       --good:#16a34a;
       --warn:#f59e0b;
       --bad:#ef4444;
@@ -284,6 +285,94 @@
     @media (max-width: 720px){
       .tableWrap{display:none}
       .mobileCards{display:block}
+    }
+
+
+    /* --- Optimizer-style polish --- */
+    body{
+      background:
+        radial-gradient(1200px 560px at 12% -8%, rgba(37,99,235,.18), transparent 62%),
+        radial-gradient(900px 560px at 90% 0%, rgba(14,165,233,.12), transparent 58%),
+        var(--bg);
+    }
+    .hero{
+      background:linear-gradient(135deg, rgba(37,99,235,.12), rgba(255,255,255,0));
+    }
+    button.primary{
+      background:linear-gradient(180deg, var(--primary), var(--primary2));
+      box-shadow:0 14px 28px rgba(37,99,235,.28);
+    }
+    .tab.active{
+      color:var(--primary);
+      box-shadow:0 -2px 0 rgba(37,99,235,.35) inset;
+    }
+    th{
+      background:linear-gradient(180deg, rgba(248,250,252,.95), rgba(248,250,252,.75));
+    }
+    td input:focus, td select:focus{
+      box-shadow:0 0 0 4px rgba(37,99,235,.14);
+    }
+    .badge{
+      letter-spacing:.02em;
+    }
+    .b-good{background:rgba(22,163,74,.12);border-color:rgba(22,163,74,.28)}
+    .b-warn{background:rgba(245,158,11,.14);border-color:rgba(245,158,11,.30)}
+    .b-bad {background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.28)}
+
+    /* Mobile card rows (true mobile layout) */
+    .mCard{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:rgba(255,255,255,.90);
+      box-shadow:var(--shadow2);
+      padding:12px;
+      margin:10px 0;
+    }
+    .mCardHead{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;
+    }
+    .mCardTitle{
+      font-weight:900;letter-spacing:-.02em;
+    }
+    .mGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .mField label{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin:0 0 6px 2px;
+    }
+    .mField input,.mField select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(11,18,32,.14);
+      background:rgba(255,255,255,.96);
+    }
+    .mMeta{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-family:var(--mono);
+      font-size:12px;
+    }
+    .mChip{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      background:#fff;
+    }
+    @media (max-width:720px){
+      .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .actions button.primary{grid-column:1 / -1}
+      .brand img{background:#fff}
     }
 
 </style>
