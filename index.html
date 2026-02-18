@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DS4RSKMVH2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DS4RSKMVH2');
-</script>
+<head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Freight Density &amp; Class Calculator (FDC) | freightdensitycalculatorshc.com</title>
@@ -18,26 +10,28 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
   <!-- AdSense (replace ca-pub-XXXXXXXXXXXX after approval) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7653614755401211"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
+    crossorigin="anonymous"></script>
 
-  .
+  
   <style>
     :root{
-      /* Optimizer-style theme (adjust these 3 to match your optimizer exactly) */
-      --primary:#2563eb;     /* main blue */
-      --primary2:#1d4ed8;    /* darker blue */
-      --accent:#0ea5e9;      /* light accent */
-      --bg:#f5f7fb;
-      --card:#ffffff;
-      --text:#0b1220;
-      --muted:#5b6b84;
-      --line:rgba(11,18,32,.10);
-      --shadow: 0 14px 34px rgba(2,6,23,.10);
-      --shadow2: 0 8px 20px rgba(2,6,23,.08);
+      --primary:#3b82f6;
+      --primary2:#2563eb;
+      --accent:#22c55e;
+      --danger:#ef4444;
+      --bg:#070b14;
+      --bg2:#0b1222;
+      --card:#0f172a;
+      --card2:#101c34;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --line:rgba(148,163,184,.18);
+      --shadow: 0 18px 40px rgba(0,0,0,.50);
+      --shadow2: 0 10px 24px rgba(0,0,0,.38);
       --radius:18px;
       --radius2:14px;
-      --good:#16a34a;
+      --good:#22c55e;
       --warn:#f59e0b;
       --bad:#ef4444;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -50,9 +44,10 @@
       font-family:var(--sans);
       color:var(--text);
       background:
-        radial-gradient(1200px 500px at 10% -10%, rgba(11,95,255,.18), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(11,95,255,.12), transparent 55%),
-        var(--bg);
+        radial-gradient(900px 520px at 15% -10%, rgba(59,130,246,.22), transparent 60%),
+        radial-gradient(800px 520px at 85% 0%, rgba(34,197,94,.10), transparent 60%),
+        radial-gradient(900px 520px at 50% 120%, rgba(239,68,68,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
     }
     a{color:var(--primary);text-decoration:none}
     a:hover{text-decoration:underline}
@@ -383,6 +378,109 @@
       .brand img{background:#fff}
     }
 
+
+    /* --- Dark optimizer-style overrides --- */
+    .hero{
+      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(59,130,246,.10));
+      border:1px solid rgba(148,163,184,.16);
+    }
+    .brand img{background:rgba(255,255,255,.06);border-color:rgba(148,163,184,.16)}
+    .sub{color:rgba(148,163,184,.90)}
+    .pill{background:rgba(2,6,23,.35); border-color:rgba(148,163,184,.18)}
+    select{color:var(--text)}
+    button{
+      background:rgba(2,6,23,.30);
+      border-color:rgba(148,163,184,.18);
+      color:var(--text);
+      box-shadow: none;
+    }
+    button:hover{background:rgba(2,6,23,.45)}
+    button.primary{
+      background:linear-gradient(180deg, var(--primary), var(--primary2));
+      color:#fff;border-color:transparent;
+      box-shadow:0 14px 28px rgba(59,130,246,.24);
+    }
+    button.danger, .btnDanger{
+      background:linear-gradient(180deg, rgba(239,68,68,.95), rgba(185,28,28,.95));
+      color:#fff;border-color:transparent;
+      box-shadow:0 14px 28px rgba(239,68,68,.20);
+    }
+    .tab{
+      background:rgba(2,6,23,.25);
+      border-color:rgba(148,163,184,.18);
+      color:rgba(148,163,184,.95);
+    }
+    .tab.active{
+      background:rgba(15,23,42,.92);
+      color:#fff;
+      box-shadow:0 -2px 0 rgba(59,130,246,.45) inset;
+    }
+    th{
+      background:rgba(2,6,23,.45);
+      color:rgba(148,163,184,.95);
+      border-bottom:1px solid rgba(148,163,184,.16);
+    }
+    tbody tr:hover td{background:rgba(59,130,246,.06)}
+    td, th{border-bottom-color:rgba(148,163,184,.14)}
+    td input, td select{
+      background:rgba(2,6,23,.40);
+      border-color:rgba(148,163,184,.20);
+      color:var(--text);
+    }
+    td input::placeholder{color:rgba(148,163,184,.55)}
+    td input:focus, td select:focus{
+      background:rgba(2,6,23,.55);
+      border-color:rgba(59,130,246,.55);
+      box-shadow:0 0 0 4px rgba(59,130,246,.16);
+    }
+    .tile{
+      background:rgba(2,6,23,.30);
+      border-color:rgba(148,163,184,.18);
+    }
+    .tile .k{color:rgba(148,163,184,.90)}
+    .tile .v small{color:rgba(148,163,184,.85)}
+    .chart{background:rgba(2,6,23,.30); border-color:rgba(148,163,184,.18)}
+    .chartRow{border-bottom-color:rgba(148,163,184,.14)}
+
+    /* Mobile card rows (true mobile layout) */
+    .mCard{
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:var(--radius);
+      background:rgba(15,23,42,.88);
+      box-shadow:0 10px 24px rgba(0,0,0,.32);
+      padding:12px;
+      margin:10px 0;
+    }
+    .mCardHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .mCardTitle{font-weight:900;letter-spacing:-.02em}
+    .mGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .mField label{
+      display:block;font-size:11px;color:rgba(148,163,184,.95);
+      letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px 2px
+    }
+    .mField input,.mField select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.20);
+      background:rgba(2,6,23,.42);
+      color:var(--text);
+    }
+    .mField input:focus,.mField select:focus{
+      outline:none;
+      border-color:rgba(59,130,246,.55);
+      box-shadow:0 0 0 4px rgba(59,130,246,.16);
+      background:rgba(2,6,23,.55);
+    }
+    .mMeta{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;color:rgba(148,163,184,.92);font-family:var(--mono);font-size:12px}
+    .mChip{border:1px solid rgba(148,163,184,.18);border-radius:999px;padding:6px 10px;background:rgba(2,6,23,.35)}
+    footer, .footerNote{color:rgba(148,163,184,.90)}
+
+
+    /* --- AdSense policy: don't render ads until real content / interaction --- */
+    body:not(.ads-enabled) .adWrap{display:none !important;}
+    body:not(.ads-enabled) .stickyAd{display:none !important;}
+
 </style>
 
 </head>
@@ -423,6 +521,51 @@
            data-full-width-responsive="true"></ins>
     </div>
 
+  <section class="card" id="publisherContent" style="margin-top:16px">
+    <div class="cardBody">
+      <h2 style="margin:0 0 8px;font-size:20px;letter-spacing:-.02em">Freight density &amp; class — quick guide</h2>
+      <p class="hint" style="margin:0 0 10px">
+        This calculator estimates <b>LTL freight class</b> from <b>density</b> using standard NMFC density guidelines.
+        Enter your item dimensions and weight (or multiple rows/loads) to compute cubic feet, density (lb/ft³),
+        and an estimated class. Results help you quote, compare carriers, and reduce reclass risk.
+      </p>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+        <div class="tile" style="margin:0">
+          <div class="k">Formula</div>
+          <div class="v" style="font-size:18px">
+            <span class="num">ft³ = (L×W×H) / 1728</span><br/>
+            <span class="num">density = weight / ft³</span>
+          </div>
+          <div class="small" style="margin-top:8px">Use inches &amp; pounds, or switch units in the toolbar.</div>
+        </div>
+        <div class="tile" style="margin:0">
+          <div class="k">Example</div>
+          <div class="v" style="font-size:18px">
+            <span class="num">48×40×50 in</span> at <span class="num">500 lb</span><br/>
+            <span class="small">Cube ≈ 55.6 ft³ → Density ≈ 9.0 lb/ft³</span>
+          </div>
+          <div class="small" style="margin-top:8px">Class may vary by commodity, packaging, and liability.</div>
+        </div>
+      </div>
+
+      <details>
+        <summary>FAQ</summary>
+        <div style="margin-top:10px" class="hint">
+          <p style="margin:0 0 10px"><b>Is this the final freight class?</b> No. Density is a strong indicator, but the final class may be affected by commodity, stowability, handling, liability, and packaging. Always confirm with your carrier or NMFC item.</p>
+          <p style="margin:0 0 10px"><b>How do multiple rows work?</b> Each row represents a handling unit (pallet/carton/crate). Totals and “All Loads” combine the rows to show overall cube, weight, and blended density.</p>
+          <p style="margin:0 0 10px"><b>How can I reduce reclass risk?</b> Measure dimensions accurately, include pallet height, avoid rounded “nice” numbers, and choose packaging that protects freight without adding unnecessary cube.</p>
+          <p style="margin:0"><b>What data is stored?</b> This tool can run offline as a PWA. Any saved data stays on your device unless you export it.</p>
+        </div>
+      </details>
+
+      <div class="footerNote" style="margin-top:12px">
+        Note: This site provides estimates for educational and quoting support. It does not provide carrier-certified classifications.
+      </div>
+    </div>
+  </section>
+
+
     <div class="grid">
       <!-- LEFT -->
       <section class="card">
@@ -462,11 +605,11 @@
           <div class="actions">
             <button class="primary" id="addRowBtn">+ Add Row</button>
             <button id="dupRowBtn" disabled>Duplicate Selected</button>
-            <button id="delRowBtn" disabled>Delete Selected</button>
+            <button id="delRowBtn" disabled class="danger">Delete Selected</button>
             <button id="clearLoadBtn">Clear This Load</button>
             <button id="pasteBtn">Paste Data</button>
             <button id="addLoadBtn">+ Add Load Tab</button>
-            <button id="delLoadBtn" class="ghost">Delete Load Tab</button>
+            <button id="delLoadBtn" class="ghost" class="danger">Delete Load Tab</button>
           </div>
 
           <div class="footerNote">
@@ -1331,5 +1474,59 @@ const active = getActiveTab();
   }
 })();
 </script>
+
+<script>
+(function(){
+  var enabled = false;
+
+  function hasMeaningfulInput(){
+    var inputs = document.querySelectorAll('input');
+    for (var i=0;i<inputs.length;i++){
+      var el = inputs[i];
+      if (!el) continue;
+      var v = (el.value || '').trim();
+      if (v && !isNaN(Number(v))) return true;
+    }
+    return false;
+  }
+
+  function enableAds(){
+    if (enabled) return;
+    enabled = true;
+    document.body.classList.add('ads-enabled');
+    try{
+      var adIns = document.querySelectorAll('ins.adsbygoogle');
+      for (var i=0;i<adIns.length;i++){
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    }catch(e){}
+  }
+
+  document.addEventListener('input', function(){
+    if (enabled) return;
+    if (hasMeaningfulInput()) enableAds();
+  }, {passive:true});
+
+  var content = document.getElementById('publisherContent');
+  if ('IntersectionObserver' in window && content){
+    var io = new IntersectionObserver(function(entries){
+      for (var i=0;i<entries.length;i++){
+        if (entries[i].isIntersecting){
+          enableAds();
+          io.disconnect();
+          break;
+        }
+      }
+    }, {threshold: 0.25});
+    io.observe(content);
+  } else {
+    window.addEventListener('scroll', function(){
+      if (enabled) return;
+      if (window.scrollY > 250) enableAds();
+    }, {passive:true});
+  }
+})();
+</script>
+
 </body>
 </html>
