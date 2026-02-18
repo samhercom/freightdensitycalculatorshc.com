@@ -16,22 +16,21 @@
   
   <style>
     :root{
-      --primary:#3b82f6;
-      --primary2:#2563eb;
-      --accent:#22c55e;
+      --primary:#2563eb;
+      --primary2:#1d4ed8;
+      --accent:#0ea5e9;
       --danger:#ef4444;
-      --bg:#070b14;
-      --bg2:#0b1222;
-      --card:#0f172a;
-      --card2:#101c34;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --line:rgba(148,163,184,.18);
-      --shadow: 0 18px 40px rgba(0,0,0,.50);
-      --shadow2: 0 10px 24px rgba(0,0,0,.38);
+      --bg:#f6f8ff;
+      --bg2:#ffffff;
+      --card:#ffffff;
+      --text:#0b1220;
+      --muted:#5b6b84;
+      --line:rgba(11,18,32,.10);
+      --shadow: 0 16px 34px rgba(2,6,23,.10);
+      --shadow2: 0 8px 20px rgba(2,6,23,.08);
       --radius:18px;
       --radius2:14px;
-      --good:#22c55e;
+      --good:#16a34a;
       --warn:#f59e0b;
       --bad:#ef4444;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -44,9 +43,9 @@
       font-family:var(--sans);
       color:var(--text);
       background:
-        radial-gradient(900px 520px at 15% -10%, rgba(59,130,246,.22), transparent 60%),
-        radial-gradient(800px 520px at 85% 0%, rgba(34,197,94,.10), transparent 60%),
-        radial-gradient(900px 520px at 50% 120%, rgba(239,68,68,.10), transparent 55%),
+        radial-gradient(1100px 520px at 12% -10%, rgba(37,99,235,.14), transparent 62%),
+        radial-gradient(900px 520px at 90% 0%, rgba(14,165,233,.10), transparent 60%),
+        radial-gradient(900px 520px at 50% 120%, rgba(37,99,235,.06), transparent 55%),
         linear-gradient(180deg, var(--bg), var(--bg2));
     }
     a{color:var(--primary);text-decoration:none}
@@ -480,6 +479,84 @@
     /* --- AdSense policy: don't render ads until real content / interaction --- */
     body:not(.ads-enabled) .adWrap{display:none !important;}
     body:not(.ads-enabled) .stickyAd{display:none !important;}
+
+
+    /* --- Light theme override (B: lighter than optimizer) --- */
+    .hero{
+      background:linear-gradient(135deg, rgba(37,99,235,.10), rgba(255,255,255,0));
+      border:1px solid rgba(11,18,32,.10);
+    }
+    .pill{
+      background:rgba(255,255,255,.78);
+      border-color:rgba(11,18,32,.10);
+    }
+    button{
+      background:rgba(255,255,255,.86);
+      border-color:rgba(11,18,32,.10);
+      color:var(--text);
+      box-shadow: var(--shadow2);
+    }
+    button:hover{background:#fff}
+    button.primary{
+      background:linear-gradient(180deg, var(--primary), var(--primary2));
+      color:#fff;border-color:transparent;
+      box-shadow:0 14px 28px rgba(37,99,235,.22);
+    }
+    button.danger{
+      background:linear-gradient(180deg, rgba(239,68,68,.92), rgba(220,38,38,.92));
+      color:#fff;border-color:transparent;
+      box-shadow:0 14px 28px rgba(239,68,68,.18);
+    }
+    .card{
+      background:rgba(255,255,255,.82);
+      backdrop-filter:saturate(160%) blur(8px);
+      border:1px solid rgba(11,18,32,.10);
+      box-shadow:var(--shadow);
+    }
+    .tile{
+      background:rgba(255,255,255,.88);
+      border-color:rgba(11,18,32,.10);
+      box-shadow:var(--shadow2);
+    }
+    th{
+      background:linear-gradient(180deg, rgba(248,250,252,.96), rgba(248,250,252,.78));
+    }
+    tbody tr:hover td{background:rgba(37,99,235,.04)}
+    td input, td select{
+      background:rgba(255,255,255,.92);
+      border-color:rgba(11,18,32,.12);
+      color:var(--text);
+    }
+    td input:focus, td select:focus{
+      border-color:rgba(37,99,235,.55);
+      box-shadow:0 0 0 4px rgba(37,99,235,.12);
+      background:#fff;
+    }
+    .tab{
+      background:rgba(255,255,255,.72);
+      border-color:rgba(11,18,32,.10);
+      color:var(--muted);
+    }
+    .tab.active{
+      background:#fff;
+      color:var(--primary);
+      box-shadow:0 -2px 0 rgba(37,99,235,.35) inset;
+    }
+    .badge{border-radius:14px}
+    .mCard{
+      background:rgba(255,255,255,.88);
+      border-color:rgba(11,18,32,.10);
+      box-shadow:var(--shadow2);
+    }
+    .mField input,.mField select{
+      background:rgba(255,255,255,.95);
+      border-color:rgba(11,18,32,.12);
+      color:var(--text);
+    }
+    .mChip{
+      background:#fff;
+      border-color:rgba(11,18,32,.10);
+    }
 
 </style>
 
