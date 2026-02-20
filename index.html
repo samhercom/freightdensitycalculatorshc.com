@@ -10,8 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
   <!-- AdSense (replace ca-pub-XXXXXXXXXXXX after approval) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
-    crossorigin="anonymous"></script>
+  <!-- AdSense script is loaded dynamically after publisher content / interaction to meet policy. -->
 
   
   <style>
@@ -589,16 +588,7 @@
   </div>
 
     <!-- Top Banner Ad -->
-    <div class="adWrap">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-XXXXXXXXXXXX"
-           data-ad-slot="1111111111"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-    </div>
-
-  <section class="card" id="publisherContent" style="margin-top:16px">
+    <section class="card" id="publisherContent" style="margin-top:16px">
     <div class="cardBody">
       <h2 style="margin:0 0 8px;font-size:20px;letter-spacing:-.02em">Freight density &amp; class — quick guide</h2>
       <p class="hint" style="margin:0 0 10px">
@@ -643,7 +633,18 @@
   </section>
 
 
-    <div class="grid">
+    
+  <div class="adWrap">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXX"
+           data-ad-slot="1111111111"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+  
+<div class="grid">
       <!-- LEFT -->
       <section class="card">
         <div class="tabs" id="tabs"></div>
@@ -767,15 +768,7 @@
   </div>
 
   <!-- Sticky Footer Ad -->
-  <div class="stickyAd">
-    <div class="inner">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-XXXXXXXXXXXX"
-           data-ad-slot="3333333333"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-    </div>
+  
   </div>
 
   <!-- Paste modal -->
@@ -799,762 +792,16 @@
     </div>
   </div>
 
-<script>
-(function(){
-  document.getElementById("year").textContent = new Date().getFullYear();
 
-  // IMPORTANT: AdSense slots won't render until you replace ca-pub and slot IDs.
-  // Safe to keep pushes; AdSense ignores until approved/valid.
-  try{
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  }catch(e){}
 
-  // Hide empty sticky ad bar until AdSense IDs are real
-  try{
-    const hasPlaceholder = document.documentElement.innerHTML.includes('ca-pub-XXXXXXXXXXXX');
-    if(hasPlaceholder){
-      const sticky = document.querySelector('.stickyAd');
-      if(sticky) sticky.style.display = 'none';
-    }
-  }catch(e){}
 
 
-  // ---------- Density → Class chart ----------
-  const DENSITY_TABLE = [
-    { min: 50, class: "50" },
-    { min: 35, class: "55" },
-    { min: 30, class: "60" },
-    { min: 22.5, class: "65" },
-    { min: 15, class: "70" },
-    { min: 13.5, class: "77.5" },
-    { min: 12, class: "85" },
-    { min: 10.5, class: "92.5" },
-    { min: 9, class: "100" },
-    { min: 8, class: "110" },
-    { min: 7, class: "125" },
-    { min: 6, class: "150" },
-    { min: 5, class: "175" },
-    { min: 4, class: "200" },
-    { min: 3, class: "250" },
-    { min: 2, class: "300" },
-    { min: 1, class: "400" },
-    { min: 0, class: "500" }
-  ];
-
-  const PACKAGES = ["Pallet","Carton","Crate","Drum","Other"];
-  const LS_KEY = "fdc_state_v1";
-
-  const state = loadState() || {
-    units: "in_lb",
-    activeTabId: "loadA",
-    tabs: [
-      { id:"loadA", name:"Load A", rows: [blankRow()] },
-      { id:"loadB", name:"Load B", rows: [blankRow()] },
-      { id:"loadC", name:"Load C", rows: [blankRow()] },
-      { id:"all",  name:"All Loads", specialAll:true }
-    ],
-    selectedRowIndex: null
-  };
-
-  const tabsEl = document.getElementById("tabs");
-  const tbodyEl = document.getElementById("tbody");
-  const mobileCardsEl = document.getElementById("mobileCards");
-  const unitsEl = document.getElementById("units");
-
-  const totWeightEl = document.getElementById("totWeight");
-  const totCubeEl = document.getElementById("totCube");
-  const blendDensityEl = document.getElementById("blendDensity");
-  const blendClassEl = document.getElementById("blendClass");
-  const maxClassEl = document.getElementById("maxClass");
-  const rowCountEl = document.getElementById("rowCount");
-  const riskCountEl = document.getElementById("riskCount");
-
-  const addRowBtn = document.getElementById("addRowBtn");
-  const dupRowBtn = document.getElementById("dupRowBtn");
-  const delRowBtn = document.getElementById("delRowBtn");
-  const clearLoadBtn = document.getElementById("clearLoadBtn");
-  const addLoadBtn = document.getElementById("addLoadBtn");
-  const delLoadBtn = document.getElementById("delLoadBtn");
-  const pasteBtn = document.getElementById("pasteBtn");
-
-  const exportBtn = document.getElementById("exportBtn");
-  const printBtn = document.getElementById("printBtn");
-  const resetBtn = document.getElementById("resetBtn");
-
-  const modalBack = document.getElementById("modalBack");
-  const closeModalBtn = document.getElementById("closeModalBtn");
-  const applyPasteBtn = document.getElementById("applyPasteBtn");
-  const examplePasteBtn = document.getElementById("examplePasteBtn");
-  const pasteArea = document.getElementById("pasteArea");
-
-  unitsEl.value = state.units;
-  renderClassChart();
-  renderTabs();
-  renderTableAndResults();
-  registerSW();
-  persist();
-
-  unitsEl.addEventListener("change", () => {
-    state.units = unitsEl.value;
-    state.selectedRowIndex = null;
-    renderTableAndResults();
-    persist();
-  });
-
-  addRowBtn.addEventListener("click", () => {
-    const tab = getActiveTab();
-    if(tab.specialAll) return;
-    tab.rows.push(blankRow());
-    state.selectedRowIndex = tab.rows.length - 1;
-    renderTableAndResults();
-    persist();
-  });
-
-  dupRowBtn.addEventListener("click", () => {
-    const tab = getActiveTab();
-    if(tab.specialAll) return;
-    if(state.selectedRowIndex == null) return;
-    const r = tab.rows[state.selectedRowIndex];
-    tab.rows.splice(state.selectedRowIndex+1, 0, {...r});
-    state.selectedRowIndex = state.selectedRowIndex+1;
-    renderTableAndResults();
-    persist();
-  });
-
-  delRowBtn.addEventListener("click", () => {
-    const tab = getActiveTab();
-    if(tab.specialAll) return;
-    if(state.selectedRowIndex == null) return;
-    tab.rows.splice(state.selectedRowIndex, 1);
-    if(tab.rows.length === 0) tab.rows.push(blankRow());
-    state.selectedRowIndex = null;
-    renderTableAndResults();
-    persist();
-  });
-
-  clearLoadBtn.addEventListener("click", () => {
-    const tab = getActiveTab();
-    if(tab.specialAll) return;
-    tab.rows = [blankRow()];
-    state.selectedRowIndex = null;
-    renderTableAndResults();
-    persist();
-  });
-
-  addLoadBtn.addEventListener("click", () => {
-    const newId = "load" + Math.random().toString(16).slice(2,8);
-    const idxAll = state.tabs.findIndex(t => t.specialAll);
-    state.tabs.splice(idxAll, 0, { id:newId, name:`Load ${String.fromCharCode(65 + idxAll)}`, rows:[blankRow()]});
-    state.activeTabId = newId;
-    state.selectedRowIndex = null;
-    renderTabs();
-    renderTableAndResults();
-    persist();
-  });
-
-  delLoadBtn.addEventListener("click", () => {
-    const tab = getActiveTab();
-    if(tab.specialAll) return;
-    const normalTabs = state.tabs.filter(t => !t.specialAll);
-    if(normalTabs.length <= 1) return;
-    state.tabs = state.tabs.filter(t => t.id !== tab.id);
-    state.activeTabId = state.tabs.find(t => !t.specialAll).id;
-    state.selectedRowIndex = null;
-    renderTabs();
-    renderTableAndResults();
-    persist();
-  });
-
-  pasteBtn.addEventListener("click", () => openModal());
-  closeModalBtn.addEventListener("click", closeModal);
-  modalBack.addEventListener("click", (e) => { if(e.target === modalBack) closeModal(); });
-
-  examplePasteBtn.addEventListener("click", () => {
-    pasteArea.value =
-`1,48,40,50,500,pallet
-2,24,24,20,200,carton
-1,60,30,40,600,crate
-3,18,18,30,150,drum`;
-  });
-
-  applyPasteBtn.addEventListener("click", () => {
-    const tab = getActiveTab();
-    if(tab.specialAll) return;
-    const parsed = parsePaste(pasteArea.value.trim());
-    if(parsed.rows.length){
-      tab.rows = parsed.rows;
-      state.selectedRowIndex = null;
-      renderTableAndResults();
-      persist();
-    }
-    closeModal();
-  });
-
-  exportBtn.addEventListener("click", () => {
-    const csv = exportCSV();
-    downloadText(csv, "fdc-freight-density-class.csv", "text/csv");
-  });
-
-  printBtn.addEventListener("click", () => window.print());
-
-  resetBtn.addEventListener("click", () => {
-    localStorage.removeItem(LS_KEY);
-    location.reload();
-  });
-
-  function renderTabs(){
-    tabsEl.innerHTML = "";
-    state.tabs.forEach(t => {
-      const btn = document.createElement("button");
-      btn.className = "tab" + (t.id === state.activeTabId ? " active": "");
-      btn.type = "button";
-      btn.textContent = t.name;
-      btn.addEventListener("click", () => {
-        state.activeTabId = t.id;
-        state.selectedRowIndex = null;
-        renderTabs();
-        renderTableAndResults();
-        persist();
-      });
-      tabsEl.appendChild(btn);
-    });
-  }
-
-  function renderTableAndResults(){
-    const active = getActiveTab();
-    const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
-
-    tbodyEl.innerHTML = "";
-    if(mobileCardsEl) mobileCardsEl.innerHTML = "";
-viewRows.forEach((row, idx) => {
-      const tr = document.createElement("tr");
-      const computed = computeRow(row);
-      const badge = classBadge(computed.freightClass, computed.riskLevel, computed.isValid);
-
-      if(!computed.isValid) tr.classList.add("rowBad");
-      else if(computed.riskLevel === "warn") tr.classList.add("rowWarn");
-
-      tr.addEventListener("click", () => {
-        if(active.specialAll) return;
-        state.selectedRowIndex = idx;
-        renderTableAndResults();
-        persist();
-      });
-
-      if(!active.specialAll && state.selectedRowIndex === idx){
-        tr.style.background = "rgba(11,95,255,.06)";
-      }
-
-      tr.appendChild(tdInput("qty", row.qty, idx, { type:"number", min:"0", step:"1" }));
-      tr.appendChild(tdSelect("pack", row.pack, idx, PACKAGES));
-      tr.appendChild(tdInput("L", row.L, idx, { type:"number", min:"0", step:"0.01" }));
-      tr.appendChild(tdInput("W", row.W, idx, { type:"number", min:"0", step:"0.01" }));
-      tr.appendChild(tdInput("H", row.H, idx, { type:"number", min:"0", step:"0.01" }));
-      tr.appendChild(tdInput("WT", row.WT, idx, { type:"number", min:"0", step:"0.01" }));
-
-      tr.appendChild(tdText(formatNumber(computed.cube, 2), true));
-      tr.appendChild(tdText(computed.isValid ? formatNumber(computed.density, 2) : "—", true));
-
-      const tdB = document.createElement("td");
-      tdB.appendChild(badge);
-      tr.appendChild(tdB);
-
-      tr.appendChild(tdText(active.specialAll ? "—" : (idx+1), true));
-            buildMobileCard(row, idx, computed, active);
-      tbodyEl.appendChild(tr);
-});
-
-    const tab = getActiveTab();
-    const canEdit = !tab.specialAll;
-    dupRowBtn.disabled = !canEdit || state.selectedRowIndex == null;
-    delRowBtn.disabled = !canEdit || state.selectedRowIndex == null;
-    clearLoadBtn.disabled = !canEdit;
-    pasteBtn.disabled = !canEdit;
-    delLoadBtn.disabled = tab.specialAll || state.tabs.filter(t=>!t.specialAll).length<=1;
-
-    const totals = computeTotals(viewRows);
-    const units = getUnitsLabels();
-
-    totWeightEl.innerHTML = `${formatNumber(totals.totalWeight, 2)} <small>${units.weight}</small>`;
-    totCubeEl.innerHTML = `${formatNumber(totals.totalCube, 2)} <small>ft³</small>`;
-    blendDensityEl.innerHTML = `${totals.totalCube>0 ? formatNumber(totals.blendedDensity, 2): "0"} <small>lb/ft³</small>`;
-    blendClassEl.textContent = totals.totalCube>0 ? totals.blendedClass : "—";
-    maxClassEl.textContent = totals.maxClass || "—";
-    rowCountEl.textContent = viewRows.length.toString();
-    riskCountEl.textContent = totals.riskCount.toString();
-  }
-
-  function tdInput(key, val, rowIndex, attrs){
-    const td = document.createElement("td");
-    const input = document.createElement("input");
-    Object.entries(attrs||{}).forEach(([k,v])=>input.setAttribute(k,v));
-    input.value = val ?? "";
-    input.classList.add("num");
-
-    
-    // Prevent row click re-render from stealing focus (iOS/iPad)
-    ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
-      input.addEventListener(ev, (e)=>e.stopPropagation(), );
-    });
-const active = getActiveTab();
-    if(active.specialAll){
-      input.disabled = true;
-      input.style.opacity = ".75";
-    } else {
-      input.addEventListener("input", () => {
-        const tab = getActiveTab();
-        const r = tab.rows[rowIndex];
-        r[key] = input.value;
-        lightweightUpdateFromEl(input);
-        persist();
-});
-    }
-    td.appendChild(input);
-    return td;
-  }
-
-  function tdSelect(key, val, rowIndex, options){
-    const td = document.createElement("td");
-    const sel = document.createElement("select");
-    options.forEach(o=>{
-      const opt = document.createElement("option");
-      opt.value = o; opt.textContent = o;
-      sel.appendChild(opt);
-    });
-    sel.value = val || options[0];
-
-    
-
-    // Prevent row click re-render from stealing focus (iOS/iPad)
-    ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
-      sel.addEventListener(ev, (e)=>e.stopPropagation(), );
-    });
-const active = getActiveTab();
-    if(active.specialAll){
-      sel.disabled = true;
-      sel.style.opacity = ".75";
-    } else {
-      sel.addEventListener("change", () => {
-        const tab = getActiveTab();
-        tab.rows[rowIndex][key] = sel.value;
-        lightweightUpdateFromEl(sel);
-        persist();
-});
-    }
-    td.appendChild(sel);
-    return td;
-  }
-
-  function tdText(text, mono=false){
-    const td = document.createElement("td");
-    td.textContent = text;
-    if(mono) td.classList.add("num");
-    return td;
-  }
-
-  function classBadge(freightClass, riskLevel, isValid){
-    const span = document.createElement("span");
-    span.className = "badge " + (!isValid ? "b-bad" : (riskLevel==="warn" ? "b-warn" : "b-good"));
-    span.textContent = isValid ? freightClass : "Fix";
-    span.title = !isValid ? "Missing/invalid inputs" : (riskLevel==="warn" ? "Near a class boundary (reclass risk)" : "OK");
-    return span;
-  }
-
-  function buildMobileCard(row, idx, computed, active){
-    if(!mobileCardsEl) return;
-    const card = document.createElement("div");
-    card.className = "mcard";
-    card.dataset.idx = idx;
-
-    const head = document.createElement("div");
-    head.className = "mhead";
-    const rowLbl = document.createElement("div");
-    rowLbl.className = "mrow";
-    rowLbl.textContent = active.specialAll ? "Row —" : ("Row " + (idx+1));
-    if(!active.specialAll && state.selectedRowIndex === idx){
-      card.style.borderColor = "rgba(11,95,255,.35)";
-      card.style.boxShadow = "0 14px 30px rgba(11,95,255,.18)";
-    }
-    const badge = classBadge(computed.freightClass, computed.riskLevel, computed.isValid);
-    badge.classList.add("mbadge");
-    head.appendChild(rowLbl);
-    head.appendChild(badge);
-    card.appendChild(head);
-
-    const grid = document.createElement("div");
-    grid.className = "mgrid";
-
-    function field(label, el){
-      const wrap = document.createElement("div");
-      wrap.className = "mfield";
-      const lab = document.createElement("label");
-      lab.textContent = label;
-      wrap.appendChild(lab);
-      wrap.appendChild(el);
-      return wrap;
-    }
-    function numInput(key, val, attrs){
-      const input = document.createElement("input");
-      input.className = "num";
-      input.inputMode = "decimal";
-      input.autocomplete = "off";
-      input.spellcheck = false;
-      input.value = val ?? "";
-      Object.entries(attrs||{}).forEach(([k,v])=>input.setAttribute(k, v));
-      ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
-        input.addEventListener(ev, (e)=>e.stopPropagation());
-      });
-      input.addEventListener("input", () => {
-        row[key] = input.value;
-        lightweightUpdateFromEl(input);
-        persist();
-      });
-      return input;
-    }
-    function selInput(key, val, options){
-      const sel = document.createElement("select");
-      options.forEach(o=>{
-        const opt=document.createElement("option"); opt.value=o; opt.textContent=o; sel.appendChild(opt);
-      });
-      sel.value = val || options[0];
-      ["pointerdown","touchstart","mousedown","click"].forEach(ev=>{
-        sel.addEventListener(ev, (e)=>e.stopPropagation());
-      });
-      sel.addEventListener("change", () => {
-        row[key] = sel.value;
-        lightweightUpdateFromEl(sel);
-        persist();
-      });
-      return sel;
-    }
-
-    grid.appendChild(field("Qty", numInput("qty", row.qty, {type:"number", min:"0", step:"1"})));
-    grid.appendChild(field("Package", selInput("pack", row.pack, PACKAGES)));
-    grid.appendChild(field("Length", numInput("L", row.L, {type:"number", min:"0", step:"0.01"})));
-    grid.appendChild(field("Width", numInput("W", row.W, {type:"number", min:"0", step:"0.01"})));
-    grid.appendChild(field("Height", numInput("H", row.H, {type:"number", min:"0", step:"0.01"})));
-    grid.appendChild(field("Weight", numInput("WT", row.WT, {type:"number", min:"0", step:"0.01"})));
-    card.appendChild(grid);
-
-    const metrics = document.createElement("div");
-    metrics.className = "mmetrics";
-    const cube = document.createElement("div");
-    cube.className = "mmetric";
-    cube.innerHTML = '<div class="k">Cube</div><div class="v mcube">' + formatNumber(computed.cube,2) + ' ft³</div>';
-    const den = document.createElement("div");
-    den.className = "mmetric";
-    den.innerHTML = '<div class="k">Density</div><div class="v mdensity">' + (computed.isValid ? formatNumber(computed.density,2) : "—") + ' lb/ft³</div>';
-    metrics.appendChild(cube);
-    metrics.appendChild(den);
-    card.appendChild(metrics);
-
-    if(!computed.isValid) card.style.outline = "2px solid rgba(239,68,68,.25)";
-    else if(computed.riskLevel==="warn") card.style.outline = "2px solid rgba(245,158,11,.25)";
-
-    card.addEventListener("click", () => {
-      if(active.specialAll) return;
-      state.selectedRowIndex = idx;
-      renderTableAndResults();
-      persist();
-    });
-
-    mobileCardsEl.appendChild(card);
-  }
-
-
-  function renderClassChart(){
-    const chartEl = document.getElementById("classChart");
-    chartEl.innerHTML = "";
-    for(let i=0;i<DENSITY_TABLE.length;i++){
-      const cur = DENSITY_TABLE[i];
-      const row = document.createElement("div");
-      row.className = "chartRow";
-      const left = document.createElement("div");
-      const right = document.createElement("div");
-      left.innerHTML = `<strong>Class ${cur.class}</strong> <span class="small">(≥ ${cur.min} lb/ft³)</span>`;
-      right.innerHTML = `<span>Range:</span> <strong>${rangeLabel(i)}</strong>`;
-      row.appendChild(left); row.appendChild(right);
-      chartEl.appendChild(row);
-    }
-    function rangeLabel(i){
-      const cur = DENSITY_TABLE[i];
-      const prev = DENSITY_TABLE[i-1];
-      if(!prev) return `≥ ${cur.min}`;
-      if(cur.min === 0) return `< ${prev.min}`;
-      return `${cur.min} – < ${prev.min}`;
-    }
-  }
-
-  function computeRow(row){
-    const units = state.units;
-    const qty = toNum(row.qty, 1);
-    const Lraw = toNum(row.L, 0);
-    const Wraw = toNum(row.W, 0);
-    const Hraw = toNum(row.H, 0);
-    const WTr = toNum(row.WT, 0);
-
-    let Lin=Lraw, Win=Wraw, Hin=Hraw, Wtlb=WTr;
-
-    if(units === "cm_kg"){
-      Lin = Lraw / 2.54;
-      Win = Wraw / 2.54;
-      Hin = Hraw / 2.54;
-      Wtlb = WTr * 2.2046226218;
-    }
-
-    const isValid = qty>0 && Lin>0 && Win>0 && Hin>0 && Wtlb>0;
-    const cube = isValid ? (Lin*Win*Hin*qty)/1728 : 0;
-    const weight = isValid ? (Wtlb*qty) : 0;
-    const density = (isValid && cube>0) ? (weight/cube) : 0;
-
-    const freightClass = isValid ? densityToClass(density) : "—";
-    const riskLevel = isValid ? boundaryRisk(density) : "bad";
-    return { cube, weight, density, freightClass, riskLevel, isValid };
-  }
-
-  function densityToClass(d){
-    for(const band of DENSITY_TABLE){
-      if(d >= band.min) return band.class;
-    }
-    return "500";
-  }
-
-  function boundaryRisk(d){
-    const bandIndex = DENSITY_TABLE.findIndex(b => d >= b.min);
-    if(bandIndex < 0) return "warn";
-    const band = DENSITY_TABLE[bandIndex];
-    if(band.min <= 0) return "good";
-    const dist = (d - band.min) / band.min;
-    return dist <= 0.05 ? "warn" : "good";
-  }
-
-  function computeTotals(rows){
-    let totalCube=0, totalWeight=0, maxClassNum=null, riskCount=0;
-    for(const r of rows){
-      const c = computeRow(r);
-      totalCube += c.cube;
-      totalWeight += c.weight;
-      if(c.isValid){
-        const clsNum = parseFloat(c.freightClass);
-        if(maxClassNum == null || clsNum > maxClassNum) maxClassNum = clsNum;
-        if(c.riskLevel==="warn") riskCount++;
-      } else {
-        riskCount++;
-      }
-    }
-    const blendedDensity = (totalCube>0) ? (totalWeight/totalCube) : 0;
-    const blendedClass = (totalCube>0) ? densityToClass(blendedDensity) : null;
-    return {
-      totalCube, totalWeight, blendedDensity, blendedClass,
-      maxClass: maxClassNum != null ? String(maxClassNum) : null,
-      riskCount
-    };
-  }
-
-
-  // Lightweight updates while typing (prevents iOS cursor/focus loss from full table re-render)
-  function lightweightUpdateFromEl(el){
-    try{
-      const tr = el.closest("tr");
-      const active = getActiveTab();
-      const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
-      let idx = -1;
-      if(tr){ idx = Array.from(tr.parentElement.children).indexOf(tr); }
-      else{
-        const card = el.closest(".mcard");
-        if(card) idx = Number(card.dataset.idx);
-      }
-      if(idx < 0){ renderTableAndResults(); return; }
-      const row = viewRows[idx];
-      if(!row){ renderTableAndResults(); return; }
-
-      const c = computeRow(row);
-
-      if(!tr){
-        const card = el.closest(".mcard");
-        if(card){
-          const cubeEl = card.querySelector(".mcube");
-          const denEl  = card.querySelector(".mdensity");
-          if(cubeEl) cubeEl.textContent = formatNumber(c.cube,2) + " ft³";
-          if(denEl) denEl.textContent = (c.isValid ? formatNumber(c.density,2) : "—") + " lb/ft³";
-          const badge = card.querySelector(".mbadge");
-          if(badge){
-            badge.className = "badge mbadge " + (!c.isValid ? "b-bad" : (c.riskLevel==="warn" ? "b-warn" : "b-good"));
-            badge.textContent = c.isValid ? c.freightClass : "Fix";
-            badge.title = !c.isValid ? "Missing/invalid inputs" : (c.riskLevel==="warn" ? "Near a class boundary (reclass risk)" : "OK");
-          }
-          card.style.outline = (!c.isValid) ? "2px solid rgba(239,68,68,.25)" : (c.riskLevel==="warn" ? "2px solid rgba(245,158,11,.25)" : "");
-        }
-      }
-      // td indices: 0 qty,1 pack,2 L,3 W,4 H,5 WT,6 cube,7 density,8 class,9 row#
-      if(tr){
-        const tds = tr.querySelectorAll("td");
-        if(tds.length >= 9){
-        tds[6].textContent = formatNumber(c.cube, 2);
-        tds[7].textContent = c.isValid ? formatNumber(c.density, 2) : "—";
-
-        const badgeTd = tds[8];
-        const badge = badgeTd.querySelector(".badge");
-        if(badge){
-          badge.className = "badge " + (!c.isValid ? "b-bad" : (c.riskLevel==="warn" ? "b-warn" : "b-good"));
-          badge.textContent = c.isValid ? c.freightClass : "Fix";
-          badge.title = !c.isValid ? "Missing/invalid inputs" : (c.riskLevel==="warn" ? "Near a class boundary (reclass risk)" : "OK");
-        }
-
-        // row highlight
-        tr.classList.remove("rowBad","rowWarn");
-        if(!c.isValid) tr.classList.add("rowBad");
-        else if(c.riskLevel === "warn") tr.classList.add("rowWarn");
-      }
-      }
-
-      // Update totals panel without rebuilding the table
-      const totals = computeTotals(viewRows);
-      const units = getUnitsLabels();
-      totWeightEl.innerHTML = `${formatNumber(totals.totalWeight, 2)} <small>${units.weight}</small>`;
-      totCubeEl.innerHTML = `${formatNumber(totals.totalCube, 2)} <small>ft³</small>`;
-      blendDensityEl.innerHTML = `${totals.totalCube>0 ? formatNumber(totals.blendedDensity, 2): "0"} <small>lb/ft³</small>`;
-      blendClassEl.textContent = totals.totalCube>0 ? totals.blendedClass : "—";
-      maxClassEl.textContent = totals.maxClass || "—";
-      rowCountEl.textContent = viewRows.length.toString();
-      riskCountEl.textContent = totals.riskCount.toString();
-    }catch(e){
-      renderTableAndResults();
-    }
-  }
-
-  function blankRow(){ return { qty:"1", pack:"Pallet", L:"", W:"", H:"", WT:"" }; }
-
-  function getActiveTab(){
-    return state.tabs.find(t => t.id === state.activeTabId) || state.tabs[0];
-  }
-  function getAllRowsFlattened(){
-    const rows = [];
-    state.tabs.forEach(t=>{
-      if(t.specialAll) return;
-      (t.rows||[]).forEach(r=>rows.push(r));
-    });
-    return rows.length ? rows : [blankRow()];
-  }
-
-  function toNum(v, fallback){
-    const n = Number(String(v ?? "").trim());
-    return Number.isFinite(n) ? n : fallback;
-  }
-  function formatNumber(n, dp){
-    const x = Number.isFinite(n) ? n : 0;
-    return x.toLocaleString(undefined,{maximumFractionDigits:dp, minimumFractionDigits:dp});
-  }
-  function getUnitsLabels(){
-    return state.units === "cm_kg" ? { dim:"cm", weight:"kg" } : { dim:"in", weight:"lb" };
-  }
-
-  function parsePaste(text){
-    const rows = [];
-    const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-    for(const line of lines){
-      const parts = line.split(",").map(s=>s.trim()).filter(p=>p.length);
-      if(parts.length < 5) continue;
-      const qty = parts[0];
-      const L = parts[1], W = parts[2], H = parts[3], WT = parts[4];
-      let pack = parts[5] || "Pallet";
-      pack = normalizePack(pack);
-      rows.push({ qty, pack, L, W, H, WT });
-    }
-    return { rows };
-  }
-  function normalizePack(p){
-    const s = String(p||"").toLowerCase();
-    if(s.includes("cart")) return "Carton";
-    if(s.includes("crate")) return "Crate";
-    if(s.includes("drum")) return "Drum";
-    if(s.includes("pal")) return "Pallet";
-    return "Other";
-  }
-
-  function openModal(){
-    modalBack.classList.add("show");
-    pasteArea.focus();
-  }
-  function closeModal(){
-    modalBack.classList.remove("show");
-    pasteArea.value = "";
-  }
-
-  function exportCSV(){
-    const header = ["load","qty","package","length","width","height","weight","cube_ft3","density_lb_ft3","class","units"];
-    const lines = [header.join(",")];
-
-    state.tabs.forEach(t=>{
-      if(t.specialAll) return;
-      (t.rows||[]).forEach(r=>{
-        const c = computeRow(r);
-        lines.push([
-          csv(t.name), csv(r.qty), csv(r.pack), csv(r.L), csv(r.W), csv(r.H), csv(r.WT),
-          c.isValid ? c.cube.toFixed(4) : "",
-          c.isValid ? c.density.toFixed(4) : "",
-          c.isValid ? c.freightClass : "",
-          csv(state.units)
-        ].join(","));
-      });
-    });
-
-    const active = getActiveTab();
-    const viewRows = active.specialAll ? getAllRowsFlattened() : active.rows;
-    const totals = computeTotals(viewRows);
-    lines.push("");
-    lines.push(["SUMMARY","total_weight_lb",totals.totalWeight.toFixed(4),"total_cube_ft3",totals.totalCube.toFixed(4),"blended_density",totals.blendedDensity.toFixed(4),"blended_class",totals.blendedClass || ""].join(","));
-    return lines.join("\n");
-  }
-  function csv(v){
-    const s = String(v ?? "");
-    if(/[,"\n]/.test(s)) return `"${s.replaceAll('"','""')}"`;
-    return s;
-  }
-  function downloadText(text, filename, mime){
-    const blob = new Blob([text], {type: mime});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 5000);
-  }
-
-  function persist(){
-    try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
-  }
-  function loadState(){
-    try{
-      const raw = localStorage.getItem(LS_KEY);
-      if(!raw) return null;
-      const s = JSON.parse(raw);
-      if(!s.tabs || !Array.isArray(s.tabs)) return null;
-      if(!s.activeTabId) s.activeTabId = s.tabs[0]?.id || "loadA";
-      if(!s.units) s.units = "in_lb";
-      if(!s.tabs.some(t=>t.specialAll)){
-        s.tabs.push({ id:"all", name:"All Loads", specialAll:true });
-      }
-      return s;
-    }catch(e){ return null; }
-  }
-
-  function registerSW(){
-    if("serviceWorker" in navigator){
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(()=>{});
-      });
-    }
-  }
-})();
-</script>
 
 <script>
 (function(){
   var enabled = false;
+  var scriptLoaded = false;
+  var scriptLoading = false;
 
   function hasMeaningfulInput(){
     var inputs = document.querySelectorAll('input');
@@ -1567,16 +814,36 @@ const active = getActiveTab();
     return false;
   }
 
-  function enableAds(){
-    if (enabled) return;
-    enabled = true;
-    document.body.classList.add('ads-enabled');
+  function loadAdSenseScript(cb){
+    if (scriptLoaded) { cb && cb(); return; }
+    if (scriptLoading) return;
+    scriptLoading = true;
+
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7653614755401211";
+    s.crossOrigin = "anonymous";
+
+    s.onload = function(){ scriptLoaded = true; scriptLoading = false; cb && cb(); };
+    s.onerror = function(){ scriptLoading = false; };
+
+    document.head.appendChild(s);
+  }
+
+  function renderAds(){
     try{
       var adIns = document.querySelectorAll('ins.adsbygoogle');
       for (var i=0;i<adIns.length;i++){
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     }catch(e){}
+  }
+
+  function enableAds(){
+    if (enabled) return;
+    enabled = true;
+    document.body.classList.add('ads-enabled');
+    loadAdSenseScript(function(){ renderAds(); });
   }
 
   document.addEventListener('input', function(){
@@ -1594,12 +861,12 @@ const active = getActiveTab();
           break;
         }
       }
-    }, {threshold: 0.25});
+    }, {threshold: 0.35});
     io.observe(content);
   } else {
     window.addEventListener('scroll', function(){
       if (enabled) return;
-      if (window.scrollY > 250) enableAds();
+      if (window.scrollY > 320) enableAds();
     }, {passive:true});
   }
 })();
